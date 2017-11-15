@@ -1,0 +1,48 @@
+{
+    "name": "phpxmlrpc/core",
+    "description": "A php library for building rpc-style http clients and servers",
+    "license": "BSD-3-Clause",
+    "homepage": "http://gggeek.github.io/phpxmlrpc-core/",
+    "keywords": [ "http", "rpc", "webservices" ],
+    "require": {
+        "php": ">=5.3.0",
+        "phpxmlrpc/http": "dev-master",
+        "php-http/httplug": "~1.1",
+        "php-http/message-factory": "~1.0"
+    },
+    "require-dev": {
+        "phpxmlrpc/debugger": "dev-master",
+        "phpunit/phpunit": ">=4.0.0, <6.0.0",
+        "phpunit/phpunit-selenium": "*",
+        "codeclimate/php-test-reporter": "dev-master",
+        "ext-curl": "*",
+        "ext-mbstring": "*",
+        "indeyets/pake": "~1.99",
+        "sami/sami": "~3.1",
+        "docbook/docbook-xsl": "~1.78"
+    },
+    "suggest": {
+        "ext-curl": "Needed for HTTPS and HTTP 1.1 support, NTLM Auth etc...",
+        "ext-zlib": "Needed for sending compressed requests and receiving compressed responses, if cURL is not available",
+        "ext-mbstring": "Needed to allow reception of requests/responses in character sets other than ASCII,LATIN-1,UTF-8"
+    },
+    "autoload": {
+        "psr-4": {"PhpHttpRpc\\API\\": "src/API", "PhpHttpRpc\\Core\\": "src/Core"}
+    },
+    "config": {
+        "secure-http": false
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "docbook/docbook-xsl",
+                "version": "1.78.1",
+                "dist": {
+                    "url": "https://sourceforge.net/projects/docbook/files/docbook-xsl/1.78.1/docbook-xsl-1.78.1.zip/download",
+                    "type": "zip"
+                }
+            }
+        }
+    ]
+}
