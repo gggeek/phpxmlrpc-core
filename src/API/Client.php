@@ -7,8 +7,18 @@ interface Client
     public function __construct($uri, array $options = array());
 
     /**
+     * The primary API to call the remote webservice
+     *
+     * @param string $methodName
+     * @param array $params
+     *
+     * @return mixed what do we return ???
+     */
+    public function call($methodName, array $params = array());
+
+    /**
      * Sends a request and returns the response object.
-     * Note that the client will always return a Response object, even if the call fails
+     * TO BE DECIDED: will the client will always return a Response object, even if the call fails
      *
      * @param Request $request
      *
@@ -32,5 +42,5 @@ interface Client
      * Retrieves the list of available options
      * @return string[]
      */
-    public function getOptionList();
+    public function getOptionsList();
 }

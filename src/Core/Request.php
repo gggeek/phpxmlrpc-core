@@ -100,11 +100,13 @@ abstract class Request implements RpcRequestInterface, ResponseFactoryInterface
     public function getHTTPHeaders()
     {
         return array(
-            'Content-Type' => array($this->contentType)
+            'Content-Type' => array($this->getContentType())
         );
 
         // @todo if method is POST, should we add Content-Length as well? Or leave it to the Client?
     }
+
+    abstract protected function getContentType();
 
     abstract public function getHTTPBody();
 
