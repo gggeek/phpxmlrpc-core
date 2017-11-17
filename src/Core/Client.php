@@ -2,12 +2,13 @@
 
 namespace PhpHttpRpc\Core;
 
+use PhpHttpRpc\API\Exception\RpcFaultException;
 use Psr\Http\Message\RequestInterface as HttpRequestInterface;
 use Psr\Http\Message\ResponseInterface as HttpResponseInterface;
 use Http\Message\RequestFactory as HttpRequestFactory;
 use Http\Client\HttpClient as HttpClientInterface;
-use PhpHttpRpc\HTTP\Discovery\HttpClientDiscovery;
-use PhpHttpRpc\HTTP\Discovery\MessageFactoryDiscovery;
+use PhpHttpRpc\HTTP\Core\Discovery\HttpClientDiscovery;
+use PhpHttpRpc\HTTP\Core\Discovery\MessageFactoryDiscovery;
 use PhpHttpRpc\API\Client as RpcClientInterface;
 use PhpHttpRpc\API\Request as RpcRequestInterface;
 use PhpHttpRpc\API\Response as RpcResponseInterface;
@@ -127,20 +128,24 @@ abstract class Client implements RpcClientInterface, RpcRequestFactoryInterface
      * @param array $params
      *
      * @return mixed what do we return ???
+     *
+     * @throws \PhpHttpRpc\API\Exception\RpcFaultException
      */
     public function call($methodName, array $params = array())
     {
         $request = $this->createRequest($methodName, $params);
         $response = $this->send($request);
 
-        /// @todo unwrap / throw exception ???
+        if ($response->faultCode() != 0) {
+            throw new RpcFaultException($response->faultString(), $response->faultCode());
+        }
 
         return $response->value();
     }
 
     /**
      * Sends a request and returns the response object.
-     * Note that the client will always return a Response object, even if the call fails
+     * @todo TO BE DECIDED: will the client will always return a Response object, even if the call fails?
      *
      * @param RpcRequestInterface $request
      * @return RpcResponseInterface
@@ -187,7 +192,7 @@ abstract class Client implements RpcClientInterface, RpcRequestFactoryInterface
     {
         if (!array_key_exists($option, $this->options) )
         {
-            throw new UnsupportedOptionException("Option $option is not supported");
+            throw new UnsupportedOptionException("Option '$option' is not supported");
         }
 
         return $this->options[$option];
@@ -209,7 +214,7 @@ abstract class Client implements RpcClientInterface, RpcRequestFactoryInterface
     {
         if (!array_key_exists($option, $this->options) )
         {
-            throw new UnsupportedOptionException("Option $option is not supported");
+            throw new UnsupportedOptionException("Option '$option' is not supported");
         }
 
         switch ($option) {
