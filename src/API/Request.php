@@ -83,7 +83,7 @@ interface Request
      * Will be called when this request is serialized for sending
      * Q: should we return a (plain php) stream instead?
      *
-     * @return string
+     * @return string|null return NULL when the http request should have no body
      */
     public function getHTTPBody();
 }

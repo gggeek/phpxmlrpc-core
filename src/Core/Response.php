@@ -5,7 +5,7 @@ namespace PhpHttpRpc\Core;
 use PhpHttpRpc\API\Response as RpcResponseInterface;
 use PhpHttpRpc\API\Fault;
 
-abstract class Response implements RpcResponseInterface
+abstract class Response extends Message implements RpcResponseInterface
 {
     protected $faultCode = 0;
     protected $faultString = '';

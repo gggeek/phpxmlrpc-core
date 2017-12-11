@@ -5,12 +5,10 @@ namespace PhpHttpRpc\Core;
 use PhpHttpRpc\API\Request as RpcRequestInterface;
 use PhpHttpRpc\API\ResponseFactory as ResponseFactoryInterface;
 
-abstract class Request implements RpcRequestInterface, ResponseFactoryInterface
+abstract class Request extends Message implements RpcRequestInterface, ResponseFactoryInterface
 {
     protected $methodName;
     protected $params = array();
-    protected $contentType = '';
-    protected $responseFactoryClass = '\PhpHttpRpc\Core\ResponseFactory';
 
     public function __construct($methodName, array $params = array())
     {

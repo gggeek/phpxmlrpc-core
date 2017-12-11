@@ -11,6 +11,7 @@ use PhpHttpRpc\HTTP\Core\Discovery\HttpClientDiscovery;
 use PhpHttpRpc\HTTP\Core\Discovery\MessageFactoryDiscovery;
 use PhpHttpRpc\API\Client as RpcClientInterface;
 use PhpHttpRpc\API\Request as RpcRequestInterface;
+use PhpHttpRpc\API\CharsetAware;
 use PhpHttpRpc\API\Response as RpcResponseInterface;
 use PhpHttpRpc\API\RequestFactory as RpcRequestFactoryInterface;
 use PhpHttpRpc\API\ResponseFactory as RpcResponseFactoryInterface;
@@ -28,13 +29,16 @@ abstract class Client implements RpcClientInterface, RpcRequestFactoryInterface
     const EXCEPTIONS_PROTOCOL = 4; // throws exceptions for in-protocol errors
     const EXCEPTIONS_ALWAYS = 7; // always throw exceptions
 
+    /// @todo see GuzzleHttp::RequestOptions : use compatible names where possible
     protected $options = array(
         'httpVersion' => null,
         'keepAlive' => true,
         'userAgent' => null,
-        'acceptedCharsetEncodings' => null,
         'timeout' => null,
         'useCURL' => self::USE_CURL_AUTO,
+
+        'requestCharsetEncoding' => 'UTF-8',
+        'acceptedCharsetEncodings' => null,
 
         'requestCompression' => null,
         'acceptedCompression' => null,
@@ -174,9 +178,11 @@ abstract class Client implements RpcClientInterface, RpcRequestFactoryInterface
     {
         if ($this->rpcRequestFactory === null) {
             $requestClass = $this->getRpcRequestClass();
+            /// @todo add options ???
             return new $requestClass($methodName, $params);
         }
 
+        /// @todo add options ???
         return $this->rpcRequestFactory->createRequest($methodName, $params);
     }
 
@@ -278,6 +284,10 @@ abstract class Client implements RpcClientInterface, RpcRequestFactoryInterface
      */
     protected function buildHttpRequest(RpcRequestInterface $request)
     {
+        if ($request instanceof CharsetAware) {
+            $request->setCharsetEncoding($this->getOption('requestCharsetEncoding'));
+        }
+
         $httpRequest = $this->httpRequestFactory->createRequest(
             $request->getHTTPMethod(),
             $request->withHTTPUri($this->getUri()),
